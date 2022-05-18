@@ -21,7 +21,7 @@ DATA_BASE = {0: {"extra data": "hello world!"}, 1: {"secret text and data": "sec
 class App:
     def __init__(self):
         self.root = tk.Tk()
-        self.root.geometry('500x500')
+        self.root.geometry('1000x1000')
         self.tree = ttk.Treeview()
         self.tree.pack()
 
@@ -56,10 +56,10 @@ class App:
         self.tree['columns'] = (
         Columns.columns_id.value, Columns.name.value, Columns.decription.value, Columns.columns_type.value)
         self.tree.column("#0", width=0, stretch=NO)
-        self.tree.column(Columns.columns_id.value, anchor=CENTER, width=80)
-        self.tree.column(Columns.name.value, anchor=CENTER, width=80)
-        self.tree.column(Columns.decription.value, anchor=CENTER, width=80)
-        self.tree.column(Columns.columns_type.value, anchor=CENTER, width=80)
+        self.tree.column(Columns.columns_id.value, anchor=CENTER, width=200)
+        self.tree.column(Columns.name.value, anchor=CENTER, width=200)
+        self.tree.column(Columns.decription.value, anchor=CENTER, width=200)
+        self.tree.column(Columns.columns_type.value, anchor=CENTER, width=200)
 
         self.tree.heading("#0", text="", anchor=CENTER)
         self.tree.heading(Columns.columns_id.value, text=Columns.columns_id.value, anchor=CENTER)
@@ -70,8 +70,8 @@ class App:
     def _set_data_box(self):
         self.data_box['columns'] = ("field", "values")
         self.data_box.column("#0", width=0, stretch=NO)
-        self.data_box.column("field", anchor=CENTER, width=80)
-        self.data_box.column("values", anchor=CENTER, width=80)
+        self.data_box.column("field", anchor=CENTER, width=200)
+        self.data_box.column("values", anchor=CENTER, width=200)
 
         self.data_box.heading("#0", text="", anchor=CENTER)
         self.data_box.heading("field", text="field", anchor=CENTER)
