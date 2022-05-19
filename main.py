@@ -2,6 +2,8 @@ import tkinter as tk
 from tkinter import ttk, NO, CENTER
 from enum import Enum
 
+from db import get_database, insert_data, find_data
+
 
 class Tags(Enum):
     exection = "exection"
@@ -15,11 +17,17 @@ class Columns(Enum):
     columns_type = "type"
 
 
-DATA_BASE = {0: {"extra data": "hello world!"}, 1: {"secret text and data": "secrets", "artifect": "me?"}}
+DATA_BASE = [{'id': '0', "extra data": "hello world!"}, {'id': '1', "secret text and data": "secrets", "artifect": "me?"}]
+mongo_client = get_database()
+
+def main():
+    [insert_data(mongo_client, i) for i in DATA_BASE]
+    front = App()
 
 
 class App:
     def __init__(self):
+
         self.root = tk.Tk()
         self.root.geometry('1000x1000')
         self.tree = ttk.Treeview()
@@ -38,8 +46,10 @@ class App:
         data = [
             [1, "Jack", "gold", Tags.exection.value],
             [2, "Tom", "Bronze", Tags.file_creation.value]
-
         ]
+
+
+
         self._insert_data(data)
 
         self.tree.bind("<Double-1>", self.OnDoubleClick)
@@ -48,13 +58,13 @@ class App:
     def OnDoubleClick(self, event):
         item = self.tree.selection()[0]
         index = self.tree.item(item, "text")
+        print(find_data(mongo_client,index))
         print("you clicked on", self.tree.item(item, "text"))
-        print(DATA_BASE[int(index)])
-        self._insert_data_box(DATA_BASE[int(index)])
+        self._insert_data_box(find_data(mongo_client, index))
 
     def _set_table(self):
         self.tree['columns'] = (
-        Columns.columns_id.value, Columns.name.value, Columns.decription.value, Columns.columns_type.value)
+            Columns.columns_id.value, Columns.name.value, Columns.decription.value, Columns.columns_type.value)
         self.tree.column("#0", width=0, stretch=NO)
         self.tree.column(Columns.columns_id.value, anchor=CENTER, width=200)
         self.tree.column(Columns.name.value, anchor=CENTER, width=200)
@@ -89,8 +99,9 @@ class App:
     def _insert_data_box(self, record):
         self._clear_data_box()
         for key, value in record.items():
-            self.data_box.insert(parent='', index='end', iid=self.count_data_box, text=str(self.count_data_box),
-                                 values=(key, value))
+            if (not key == "id") and (not key == "_id"):
+                self.data_box.insert(parent='', index='end', iid=self.count_data_box, text=str(self.count_data_box),
+                                     values=(key, value))
             self.count_data_box += 1
 
     def _insert_data(self, data):
@@ -103,4 +114,4 @@ class App:
 
 
 if __name__ == "__main__":
-    app = App()
+    main()
