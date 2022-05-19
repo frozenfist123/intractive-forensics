@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, NO, CENTER
 from enum import Enum
 
-from db import get_database, insert_data, find_data
+from db import get_database, insert_data, find_data, get_lines, del_all
 
 
 class Tags(Enum):
@@ -17,10 +17,13 @@ class Columns(Enum):
     columns_type = "type"
 
 
-DATA_BASE = [{'id': '0', "extra data": "hello world!"}, {'id': '1', "secret text and data": "secrets", "artifect": "me?"}]
+DATA_BASE = [{'id': '0', "extra data": "hello world!", 'data': [1, "Jack", "gold", Tags.exection.value]},
+             {'id': '1', "secret text and data": "secrets", "artifect": "me?", 'data':
+                 [2, "Tom", "Bronze", Tags.file_creation.value]}]
 mongo_client = get_database()
 
 def main():
+    del_all(mongo_client)
     [insert_data(mongo_client, i) for i in DATA_BASE]
     front = App()
 
@@ -43,13 +46,7 @@ class App:
         self.count_data_box = 0
         self._set_tags_colors()
 
-        data = [
-            [1, "Jack", "gold", Tags.exection.value],
-            [2, "Tom", "Bronze", Tags.file_creation.value]
-        ]
-
-
-
+        data = get_lines(mongo_client)
         self._insert_data(data)
 
         self.tree.bind("<Double-1>", self.OnDoubleClick)
